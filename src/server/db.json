@@ -158,20 +158,29 @@
 
     "types": [
         {
+            "id": "0",
+            "name": "Все товары",
+            "selected": "false"
+        },
+        {
             "id": "1",
-            "type": "Кальяны"
+            "name": "Кальяны",
+            "selected": "false"
         },
         {
             "id": "2",
-            "type": "Чаши"
+            "name": "Чаши",
+            "selected": "false"
         },
         {
             "id": "3",
-            "type": "Шланги"
+            "name": "Шланги",
+            "selected": "false"
         },
         {
             "id": "4",
-            "type": "Колбы"
+            "name": "Колбы",
+            "selected": "false"
         }
     ]
 }
