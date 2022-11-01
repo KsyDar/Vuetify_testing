@@ -1,12 +1,18 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import Catalog from '../components/Catalog.vue'
+import Catalog from '../components/views/Catalog.vue'
+import Basket from '../components/views/Basket.vue'
 
 
 const routes = [
   {
     name: 'Catalog',
     path: '/',
-    component: Catalog
+    component: Catalog,
+  },
+  {
+    name: 'Basket',
+    path: '/basket',
+    component: Basket,
   }
 ]
 

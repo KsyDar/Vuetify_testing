@@ -2,12 +2,12 @@
   <v-app>
     <Header></Header>
     <v-main>
-      <Catalog />
+      <router-view>
+      </router-view>
     </v-main>
   </v-app>
 </template>
 
 <script setup>
-import Catalog from "./components/Catalog.vue";
 import Header from "./components/Header.vue";
 </script>
