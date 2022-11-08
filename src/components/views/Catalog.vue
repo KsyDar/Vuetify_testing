@@ -1,31 +1,31 @@
 <template>
   <div style="display: flex">
-    <div style="padding: 16px">
-      <v-card>
-        <v-list>
-          <v-list-item>
-            <v-list-item-action start>
-              <v-checkbox-btn
-                label="Все товары"
-                @change="selectAll()"
-                v-model="allSelected"
-              ></v-checkbox-btn>
-            </v-list-item-action>
-          </v-list-item>
-          <v-list-item v-for="typeItem in types" :key="typeItem.id">
-            <v-list-item-action start>
-              <v-checkbox-btn
-                :label="typeItem.name"
-                @change="filter(typeItem)"
-              ></v-checkbox-btn>
-            </v-list-item-action>
-          </v-list-item>
-        </v-list>
-      </v-card>
+    <v-card :elevation="3" style="padding: 16px; min-width: fit-content; position: fixed; z-index: 1; top: 72px;">
+      <v-list class="d-flex d-sm-block" style="flex-wrap: wrap;">
+        <v-list-item>
+          <v-list-item-action start>
+            <v-checkbox-btn
+              label="Все товары"
+              @change="selectAll()"
+              v-model="allSelected"
+            ></v-checkbox-btn>
+          </v-list-item-action>
+        </v-list-item>
+        <v-list-item v-for="typeItem in types" :key="typeItem.id">
+          <v-list-item-action start>
+            <v-checkbox-btn
+              :label="typeItem.name"
+              @change="filter(typeItem)"
+            ></v-checkbox-btn>
+          </v-list-item-action>
+        </v-list-item>
+      </v-list>
+    </v-card>
+    <div style="min-width: 200px;" class="d-none d-sm-block">
     </div>
     <v-container>
       <v-row align="start">
-        <v-col v-for="product in itemsPage" :key="product.id" cols="4">
+        <v-col v-for="product in itemsPage" :key="product.id" :cols="cols">
           <v-card :title="product.name">
             <v-img :src="product.image" height="200px" cover />
             <v-card-actions>
@@ -57,9 +57,12 @@
 
 <script setup>
 import { useProductsStore } from "../../store/products";
+import { useUsersStore } from "../../store/users";
 import { computed, onBeforeMount, ref } from "vue";
 
 const productsStore = useProductsStore();
+const usersStore = useUsersStore();
+
 const products = computed(() => productsStore.filteredItems);
 const types = computed(() => productsStore.types);
 
@@ -68,19 +71,36 @@ const filters = ref([]);
 onBeforeMount(async () => {
   await productsStore.getProducts();
   await productsStore.getTypes();
+  await usersStore.getUsers();
 });
 
+
+const screenWidth = computed(() => window.innerWidth);
+const cols = computed(() => {
+  if(screenWidth.value < 600) {
+    return 12;
+  }
+  else {
+    return 4;
+  }
+});
 const countItemsOnPage = 6;
 const page = ref(1);
 const pagesCount = computed(() =>
   Math.ceil(products.value.length / countItemsOnPage)
 );
 const itemsPage = computed(() => {
-  return products.value.slice(
-    countItemsOnPage * (page.value - 1),
-    countItemsOnPage * page.value
-  );
+  if(screenWidth.value < 600) {
+    return products.value;
+  }
+  else {
+    return products.value.slice(
+      countItemsOnPage * (page.value - 1),
+      countItemsOnPage * page.value
+    );
+  }
 });
+
 
 const allSelected = ref(true);
 
@@ -113,7 +133,7 @@ const count = (product) => {
     return counter = item.amount;
   }
   else return false;
-}
+};
 
 const addToBasket = (product) => {
   const basketItem = {

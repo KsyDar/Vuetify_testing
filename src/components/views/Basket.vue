@@ -66,14 +66,20 @@
         </tr>
       </tbody>
     </v-table>
-    <v-btn>Оформить заказ</v-btn>
+    <div>
+      <NewOrderModal 
+      :isOrderOpened="isOrderOpened"
+      :total="total"
+      />
+    </div>
   </div>
 </template>
 
 <script setup>
-import { computed } from "@vue/runtime-core";
+import { computed, ref } from "@vue/runtime-core";
 import router from "../../router";
 import { useProductsStore } from "../../store/products";
+import NewOrderModal from "../NewOrderModal.vue";
 
 const productsStore = useProductsStore();
 const shopList = computed(() => productsStore.basket);
@@ -96,6 +102,8 @@ const deleteAll = (product) => {
 const goToCatalog = () => {
   router.push({ name: "Catalog" });
 };
+
+const isOrderOpened = ref(false);
 </script>
 
 <style>
