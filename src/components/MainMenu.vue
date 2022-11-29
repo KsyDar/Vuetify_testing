@@ -6,7 +6,7 @@
         @click="isMenuOpened = !isMenuOpened"
       />
     </template>
-    <v-list>
+    <v-list class="bg-main_color_white">
       <v-list-item class="pa-0">
         <v-btn class="w-100" variant="text" @click="goToBasket">
           Корзина
@@ -14,23 +14,22 @@
       </v-list-item>
       <v-list-item class="pa-0">
         <v-btn
-        class="w-100"
-        variant="text"
-        :disabled="!isAuthorized"
-        @click="goToOrders"
-      >
-        Заказы
-      </v-btn>
-      </v-list-item>
-      <v-list-item class="pa-0">
-        <v-btn
-          v-if="!isAuthorized"
           class="w-100"
           variant="text"
-          @click="authorisation"
+          :disabled="!isAuthorized"
+          @click="goToOrders"
         >
-          Войти
+          Заказы
         </v-btn>
+      </v-list-item>
+      <v-list-item class="pa-0">
+        <div v-if="!isAuthorized" class="w-100">
+          <AuthForm
+            :isMenu="true"
+            :isFullScreen="!isFullScreen"
+            @authorisationSuccess="authorizeOpen = false"
+          />
+        </div>
         <v-btn v-else class="w-100" variant="text" @click="exit"> Выйти </v-btn>
       </v-list-item>
     </v-list>
@@ -39,16 +38,24 @@
 
 <script setup>
 import router from "../router";
+
 import { ref } from "@vue/reactivity";
+
 import { useUsersStore } from "../store/users";
+
+import AuthForm from "./modals/AuthForm.vue";
+
 
 const props = defineProps({
   isMenuOpened: Boolean,
   isAuthorized: Boolean,
   authorizeOpen: Boolean,
+  isFullScreen: Boolean,
 });
 
 const emits = defineEmits(["login", "exit"]);
+
+const isOrdersOpened = ref(false);
 
 const goToBasket = () => {
   router.push({ name: "Basket" });
@@ -58,15 +65,9 @@ const authorisation = () => {
   emits("login");
 };
 
-
-const isOrdersOpened = ref(false);
-
 const goToOrders = () => {
-    router.push({ name: "OrdersList" });
+  router.push({ name: "OrdersList" });
 };
-
-
-const usersStore = useUsersStore();
 
 const exit = () => {
   emits("exit");

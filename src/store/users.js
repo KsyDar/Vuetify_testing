@@ -8,6 +8,8 @@ export const useUsersStore = defineStore('users', {
             try {
                 const res = await axios.get('http://localhost:3000/users');
                 this.users = res.data;
+                const localUser = localStorage.getItem('name');
+                this.currentUser = this.users.find(user => user.name === localUser);
             }
             catch(err) {
                 console.log(err);
@@ -21,15 +23,18 @@ export const useUsersStore = defineStore('users', {
             }
             else {
                 this.currentUser = user;
+                localStorage.setItem('name', this.currentUser.name);
             }
         },
 
         exit() {
             this.currentUser = null;
+            localStorage.removeItem('name');
         },
 
         async addUser(user) {
             this.currentUser = user;
+            localStorage.setItem('name', this.currentUser.name);
             try {
                 await axios.post('http://localhost:3000/users', user);
             }
@@ -40,9 +45,10 @@ export const useUsersStore = defineStore('users', {
 
         async getOrdersHistory() {
             try {
-                const res = await axios.get('http://localhost:3000/orders')
+                const res = await axios.get('http://localhost:3000/orders/')
                 this.orders = res.data;
                 this.currentOrders = this.orders.filter(el => el.userId === this.currentUser.id);
+                console.log(this.currentOrders);
             }
             catch(err) {
                 console.log(err);

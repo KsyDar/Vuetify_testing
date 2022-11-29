@@ -2,7 +2,16 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 
 export const useProductsStore = defineStore('products', {
-    state: () => ({ 'products': [], currentProduct: null, 'types': [], filters: [], 'basket': [] }),
+    state: () => { 
+        const localBasket = JSON.parse(localStorage.getItem('basket'))
+        return {
+            'products': [], 
+            currentProduct: null, 
+            'types': [], 
+            filters: [],
+        }
+    },
+
     actions: {
         async getProducts(type) {
             try {
@@ -32,37 +41,18 @@ export const useProductsStore = defineStore('products', {
             }
         },
 
-        addToBasket(product) {
-            const repeat = this.basket.find(el => el.id === product.id);
-            if(repeat) {
-                repeat.amount++;
-            }
-            else {
-                this.basket.push(product);
+        cleanFilters() {
+            this.filters = [];
+        },
+
+        setFilter(type) {
+            if (this.filters.indexOf(type.id) === -1) {
+                this.filters.push(type.id);
+                type.selected = true;
+            } else {
+                this.filters = this.filters.filter((f) => f !== type.id);
+                type.selected = false;
             };
-        },
-
-        removeFromBasket(product) {
-            const item = this.basket.find(el => el.id === product.id);
-            if(item.amount > 1) {
-                item.amount -= 1;
-            }
-            else {
-                this.basket = this.basket.filter(el => el.id !== product.id);
-            }
-        },
-
-        calculateTotal() {
-            let total = 0;
-            this.basket.forEach(el => {
-                const sum = el.amount * el.price
-                total += sum
-            });
-            return total
-        },
-
-        setFilter(filters) {
-            this.filters = filters;
         },
     },
 
@@ -71,6 +61,5 @@ export const useProductsStore = defineStore('products', {
             if(this.filters.length === 0 || this.filters.length >= this.types) return this.products;
             return this.products.filter(product => this.filters.indexOf(product.typeId) !== -1);
         }
-    },
-
+    }
 })
