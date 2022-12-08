@@ -18,6 +18,7 @@ const myTheme = {
     text_color_orange: '#ef4602',
     marker_color_orange: '#fc743e',
     marker_color_grey: '#f0f0f0',
+    marker_color_green: '#74cea4',
   }
 }
 

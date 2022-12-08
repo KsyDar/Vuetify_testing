@@ -10,26 +10,35 @@ export const useBasketStore = defineStore('basket', {
     },
 
     actions: {
-        addToBasket(product) {
-            const repeat = this.basket.find(el => el.id === product.id);
-            if(repeat) {
-                repeat.amount++;
+        updateBasket(product) {
+            const item = this.basket.find(el => el.id === product.id);
+            if(!item) {
+                this.basket.push(product);
             }
             else {
-                this.basket.push(product);
-            };
+                if(product.amount < 1) {
+                    this.basket = this.basket.filter(el => el.id !== product.id);
+                }
+                else {
+                    item.amount = product.amount;
+                }
+            }
             localStorage.basket = JSON.stringify(this.basket);
         },
 
-        removeFromBasket(product) {
-            const item = this.basket.find(el => el.id === product.id);
-            if(item.amount > 1) {
-                item.amount -= 1;
+        getCounter(product) {
+            const item = this.basket.find((el) => el.id === product.id);
+            if(item) {
+                return item.amount
             }
             else {
-                this.basket = this.basket.filter(el => el.id !== product.id);
+                return 0
             };
-            localStorage.basket = JSON.stringify(this.basket);
+        },
+
+        cleanBasket() {
+            this.basket = [];
+            localStorage.removeItem('basket');
         },
 
         calculateTotal() {

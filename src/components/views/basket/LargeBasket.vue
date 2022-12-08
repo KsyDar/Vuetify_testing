@@ -28,36 +28,11 @@
             </td>
             <td>{{ item.name }}</td>
             <td class="d-flex justify-center align-center">
-              <v-item-group
-                style="height: 36px; max-width: fit-content"
-                class="
-                  bg-main_color_green
-                  rounded-pill
-                  d-flex
-                  justify-center
-                  align-center
-                  w-75
-                  pa-2
-                "
-              >
-                <v-btn
-                  icon="mdi-minus"
-                  @click="removeFromBasket(item)"
-                  class="bg-main_color_green h-auto w-auto mr-2 elevation-0"
-                >
-                </v-btn>
-                <div>{{ item.amount }}</div>
-                <v-btn
-                  icon="mdi-plus"
-                  @click="addToBasket(item)"
-                  class="bg-main_color_green h-auto w-auto ml-2 elevation-0"
-                >
-                </v-btn>
-              </v-item-group>
+              <UIcounter :product="item"/>
             </td>
             <td>x</td>
-            <td>{{ item.price }} р</td>
-            <td>{{ item.price * item.amount }} р</td>
+            <td>{{ item.price.toLocaleString() }} р</td>
+            <td>{{ (item.price * item.amount).toLocaleString() }} р</td>
             <td>
               <v-btn
                 variant="flat"
@@ -73,6 +48,9 @@
 </template>
 
 <script setup>
+import UIcounter from '../../ui/UIcounter.vue';
+
+
 const props = defineProps({
     shopList: Array,
 });

@@ -2,41 +2,43 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 
 export const useUsersStore = defineStore('users', {
-    state: () => ({ 'users': [], currentUser: null, orders: [], currentOrders: null}),
+    state: () => { 
+        const localUser = localStorage.getItem('id');
+        return { 
+            currentUser: localUser === null ? null : localUser, 
+            currentOrders: [],
+        }
+    },
     actions: {
-        async getUsers() {
+        async login(name, password) {
             try {
-                const res = await axios.get('http://localhost:3000/users');
-                this.users = res.data;
-                const localUser = localStorage.getItem('name');
-                this.currentUser = this.users.find(user => user.name === localUser);
+                if (name.length === 0 || password.length === 0) return
+                const res = await axios.get(`http://localhost:3000/users?name=${name}&password=${password}`);
+                if (res.data.length === 0) return
+                this.currentUser = res.data[0].id;
+                localStorage.setItem('id', res.data[0].id);
             }
             catch(err) {
                 console.log(err);
             }
         },
 
-        login(name, password) {
-            const user = this.users.find(el => el.name === name && el.password === password);
-            if(!user) {
-                return false;
-            }
-            else {
-                this.currentUser = user;
-                localStorage.setItem('name', this.currentUser.name);
-            }
-        },
-
         exit() {
-            this.currentUser = null;
-            localStorage.removeItem('name');
+            localStorage.removeItem('id');
         },
 
         async addUser(user) {
-            this.currentUser = user;
-            localStorage.setItem('name', this.currentUser.name);
+            const repeat = await axios.get(`http://localhost:3000/users?name=${user.name}`);
+            if(repeat.data.length !== 0) {
+                return false
+            }
+
+
             try {
-                await axios.post('http://localhost:3000/users', user);
+                const newUser = await axios.post('http://localhost:3000/users', user);
+                this.currentUser = newUser.data.id;
+                localStorage.setItem('id', newUser.data.id);   
+                return true;
             }
             catch(err) {
                 console.log(err);
@@ -45,10 +47,8 @@ export const useUsersStore = defineStore('users', {
 
         async getOrdersHistory() {
             try {
-                const res = await axios.get('http://localhost:3000/orders/')
-                this.orders = res.data;
-                this.currentOrders = this.orders.filter(el => el.userId === this.currentUser.id);
-                console.log(this.currentOrders);
+                const res = await axios.get(`http://localhost:3000/orders?userId=${this.currentUser}`);
+                this.currentOrders = res.data;
             }
             catch(err) {
                 console.log(err);

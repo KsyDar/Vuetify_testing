@@ -1,42 +1,51 @@
 <template>
   <v-dialog
     v-model="authorizeOpen"
-    activator="parent"
     class="pa-16"
     :fullscreen="isFullScreen"
   >
-    <template v-slot:activator="{ authorizeOpen }">
+    <template v-slot:activator="{ props }">
       <v-btn
         v-if="isMenu"
         class="w-100"
-        v-bind="authorizeOpen"
+        v-bind="props"
         variant="text"
         @click="authorizeOpen = true"
       >
         Войти
       </v-btn>
       <v-btn
-        v-else
+        v-if="!isNewOrder"
         icon="mdi-account-arrow-right"
-        v-bind="authorizeOpen"
+        v-bind="props"
         @click="authorizeOpen = true"
       >
       </v-btn>
     </template>
+
     <v-card class="ma-auto h-50 w-50 bg-main_color_white">
       <v-form ref="form" lazy-validation>
         <v-container>
           <v-row class="justify-end">
+            <v-card-text v-if="isNewOrder">
+              Желаете авторизоваться?
+            </v-card-text>
             <v-card-actions>
               <v-btn
                 icon="mdi-close-thick"
-                @click="authorizeOpen = false"
+                @click="authorizeOpen = false; emit('closed')"
               ></v-btn>
             </v-card-actions>
           </v-row>
-          <v-row v-if="error" class="justify-center"
-            >Неправильный логин или пароль!</v-row
-          >
+          <v-row v-if="errorLogin" class="justify-center">
+            Неправильный логин или пароль!
+          </v-row>
+          <v-row v-if="errorFilling" class="justify-center">
+            Все поля должны быть заполнены!
+          </v-row>
+          <v-row v-if="errorRegistration" class="justify-center">
+            Пользователь с таким логином уже существует!
+          </v-row>
           <v-row no-gutters>
             <v-col>
               <v-text-field
@@ -51,6 +60,7 @@
           <v-row no-gutters>
             <v-col>
               <v-text-field
+                type="password"
                 class="mb-5"
                 label="Password"
                 required
@@ -61,58 +71,111 @@
           </v-row>
           <v-row>
             <v-card-actions class="w-100 justify-space-between">
-              <v-btn @click="login" class="bg-main_color_green rounded-pill">
+              <v-btn
+                @click="login()"
+                class="bg-main_color_green rounded-pill"
+              >
                 Войти
               </v-btn>
+
               <v-btn
-                @click="register"
-                class="bg-marker_color_orange rounded-pill"
+                v-if="isNewOrder"
+                class="bg-marker_color_orange rounded-pill d-block ma-0"
+                variant="text"
+                @click="authorizeOpen = false; emit('closed')"
               >
-                Зарегистрироваться
+                Продолжить без авторизации
               </v-btn>
-            </v-card-actions>
-          </v-row>
-        </v-container>
-      </v-form>
-    </v-card>
+              
+              <v-btn
+              v-else
+              @click="register()"
+              class="bg-marker_color_orange rounded-pill"
+              >
+              Зарегистрироваться
+            </v-btn>
+          </v-card-actions>
+        </v-row>
+      </v-container>
+    </v-form>
+  </v-card>
   </v-dialog>
 </template>
 
 <script setup>
 import { ref } from "@vue/reactivity";
+import { watch } from "@vue/runtime-core";
 import { useUsersStore } from "../../store/users";
 
+
 const props = defineProps({
-  authorizeOpen: Boolean,
+  isOpen: Boolean,
   isMenu: Boolean,
   isFullScreen: Boolean,
+  isNewOrder: {
+    type: Boolean,
+    default: false,
+  },
 });
 
-const emits = defineEmits(["authorisationSuccess"]);
-
-const name = ref("");
-const password = ref("");
-const error = ref(false);
+const emit = defineEmits();
 
 const usersStore = useUsersStore();
+const name = ref("");
+const password = ref("");
 
-const login = () => {
-  usersStore.login(name.value, password.value);
-  if (usersStore.currentUser) {
-    emits("authorisationSuccess");
-  } else {
-    error.value = true;
-  }
+const errorLogin = ref(false);
+const errorRegistration = ref(false);
+const errorFilling = ref(false);
+
+const authorizeOpen = ref(false);
+
+watch(() => props.isOpen, 
+(val) => {
+  authorizeOpen.value = val;
+})
+
+
+const login = async () => {
+  errorLogin.value = false;
+  errorRegistration.value = false;
+  errorFilling.value = false;
+
+  if (name.value.length === 0 || password.value.length === 0) {
+    errorFilling.value = true;
+    return
+  };
+
+  await usersStore.login(name.value, password.value);
+  if (usersStore.currentUser === null) {
+    errorLogin.value = true;
+    authorizeOpen.value = true;
+    return
+  };
+
+  emit("closed");
 };
 
-const register = () => {
+const register = async () => {
+  errorLogin.value = false;
+  errorRegistration.value = false;
+  errorFilling.value = false;
+
+  if (name.value.length === 0 || password.value.length === 0) {
+    errorFilling.value = true;
+    return
+  };
+
   const user = {
     name: name.value,
     password: password.value,
   };
-  
-  usersStore.addUser(user);
-  emits("authorisationSuccess");
+
+  await usersStore.addUser(user);
+
+  if (usersStore.currentUser === null) {
+    errorRegistration.value = true;
+  };
 };
 </script>
 

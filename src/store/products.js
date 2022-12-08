@@ -2,8 +2,7 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 
 export const useProductsStore = defineStore('products', {
-    state: () => { 
-        const localBasket = JSON.parse(localStorage.getItem('basket'))
+    state: () => {
         return {
             'products': [], 
             currentProduct: null, 
@@ -13,17 +12,10 @@ export const useProductsStore = defineStore('products', {
     },
 
     actions: {
-        async getProducts(type) {
+        async getProducts() {
             try {
                 const res = await axios.get('http://localhost:3000/products');
                 this.products = res.data;
-                if (type) {
-                    let filteredProducts = this.products.filter(product => product.typeId === type);
-                    return filteredProducts;
-                }
-                else {
-                    return this.products;
-                }
             }
             catch (err) {
                 console.log(err);
@@ -32,9 +24,10 @@ export const useProductsStore = defineStore('products', {
 
         async getTypes() {
             try {
-                const res = await axios.get('http://localhost:3000/types');
-                this.types = res.data;
-                return this.types;
+                if(this.types.length === 0) {
+                    const res = await axios.get('http://localhost:3000/types');
+                    this.types = res.data;
+                }
             }
             catch (err) {
                 console.log(err);
@@ -43,6 +36,7 @@ export const useProductsStore = defineStore('products', {
 
         cleanFilters() {
             this.filters = [];
+            this.types.forEach(type => type.selected = false)
         },
 
         setFilter(type) {

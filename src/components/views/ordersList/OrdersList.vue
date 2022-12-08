@@ -1,7 +1,7 @@
 <template>
   <v-main>
     <v-card
-      v-if="orders === null"
+      v-if="orders.length === 0"
       title="История заказов пуста!"
       subtitle="Вы ещё ничего не сделали ни одного заказа! Вернуться к каталогу?"
       class="bg-main_color_white text-text_color_grey"
@@ -26,7 +26,6 @@
 </template>
 
 <script setup>
-import { useProductsStore } from "../../../store/products";
 import { useUsersStore } from "../../../store/users";
 
 import router from "../../../router";
@@ -43,13 +42,12 @@ const { width } = useDisplay();
 const isMobile = computed(() => width.value < 600);
 
 const usersStore = useUsersStore();
-const productsStore = useProductsStore();
 
 onBeforeMount(async () => {
   await usersStore.getOrdersHistory();
 });
 
-const orders = computed(() => usersStore.orders);
+const orders = computed(() => usersStore.currentOrders);
 
 const goToCatalog = () => {
   router.push({ name: "Catalog" });

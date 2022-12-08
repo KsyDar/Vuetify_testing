@@ -27,14 +27,12 @@
         ></v-btn>
         <div v-else>
           <AuthForm
-            @authorisationSuccess="authorizeOpen = false"
-            :authorizeOpen="authorizeOpen"
             :isFullScreen="!isDisable"
           />
         </div>
       </div>
       <div v-else>
-        <MobileFilters />
+        <MobileFilters v-if="isFiltersVisible" />
       </div>
     </template>
   </v-app-bar>
@@ -50,8 +48,16 @@ import { useUsersStore } from "../store/users";
 
 import MainMenu from "./MainMenu.vue";
 import AuthForm from "./modals/AuthForm.vue";
-import Filters from "./filters/Filters.vue";
 import MobileFilters from "./filters/MobileFilters.vue";
+
+
+const isFiltersVisible = computed(() => {
+  const path = router.currentRoute.value.name;
+  if (path === "Basket" || path === "OrdersList") {
+    return false
+  }
+  return true;  
+});
 
 
 const goToBasket = () => {
@@ -65,7 +71,7 @@ const goToCatalog = () => {
 const usersStore = useUsersStore();
 const authorizeOpen = ref(false);
 const isAuthorized = computed(() => {
-  if(usersStore.currentUser) {
+  if(usersStore.currentUser !== null) {
     return true
   }
   else return false
@@ -74,6 +80,7 @@ const isMenuOpened = ref(false);
 
 const exit = () => {
   usersStore.exit();
+  usersStore.$reset();
 };
 
 

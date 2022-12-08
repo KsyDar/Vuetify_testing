@@ -19,37 +19,18 @@
               <v-img :src="product.image" height="200px" cover />
               <v-card-actions class="bg-main_color_white">
                 <v-card-text class="text-marker_color_orange text-h6">
-                  {{ product.price }}p
+                  {{ product.price.toLocaleString() }}p
                 </v-card-text>
                 <v-spacer></v-spacer>
-                <v-item-group
-                  v-if="count(product)"
-                  style="align-items: center; height: 36px"
-                  class="bg-main_color_green rounded-pill d-flex"
-                >
-                  <v-btn
-                    icon="mdi-minus"
-                    @click="removeFromBasket(product)"
-                    class="bg-main_color_green h-auto w-auto"
-                  >
-                  </v-btn>
-                  <div>
-                    {{ count(product) }}
-                  </div>
-                  <v-btn
-                    icon="mdi-plus"
-                    @click="addToBasket(product)"
-                    class="bg-main_color_green h-auto w-auto"
-                  >
-                  </v-btn>
-                </v-item-group>
                 <v-btn
-                  v-else
+                  v-if="(basketStore.getCounter(product) === 0)"
                   @click="addToBasket(product)"
                   class="bg-main_color_green font-weight-bold rounded-pill"
                 >
                   В корзину
                 </v-btn>
+
+                <UIcounter v-else :product="product"/>
               </v-card-actions>
             </v-card>
           </v-col>
@@ -69,23 +50,19 @@
 
 <script setup>
 import { useProductsStore } from "../../store/products";
-import { useUsersStore } from "../../store/users";
 import { useBasketStore } from "../../store/basket";
 
-import { computed, onBeforeMount, ref } from "vue";
+import { computed, onBeforeMount, ref, watch } from "vue";
 import { useDisplay } from "vuetify";
 
 import Filters from "../filters/Filters.vue";
-
+import UIcounter from "../ui/UIcounter.vue";
 
 const productsStore = useProductsStore();
-const usersStore = useUsersStore();
 const basketStore = useBasketStore();
 
 onBeforeMount(async () => {
   await productsStore.getProducts();
-  await productsStore.getTypes();
-  await usersStore.getUsers();
 });
 
 const { width } = useDisplay();
@@ -103,6 +80,13 @@ const products = computed(() => productsStore.filteredItems);
 const countItemsOnPage = 6;
 const page = ref(1);
 
+watch(
+  () => productsStore.filters.length,
+  () => {
+    page.value = 1;
+  }
+);
+
 const pagesCount = computed(() =>
   Math.ceil(products.value.length / countItemsOnPage)
 );
@@ -114,14 +98,6 @@ const itemsPage = computed(() => {
   );
 });
 
-const count = (product) => {
-  let counter = 0;
-  const item = basketStore.basket.find((el) => el.id === product.id);
-  if (item) {
-    return (counter = item.amount);
-  } else return false;
-};
-
 const addToBasket = (product) => {
   const basketItem = {
     amount: 1,
@@ -130,11 +106,7 @@ const addToBasket = (product) => {
     image: product.image,
     price: product.price,
   };
-  basketStore.addToBasket(basketItem);
-};
-
-const removeFromBasket = (product) => {
-  basketStore.removeFromBasket(product);
+  basketStore.updateBasket(basketItem);
 };
 </script>
 

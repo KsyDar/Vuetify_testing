@@ -7,38 +7,53 @@
       class="bg-main_color_white text-text_color_grey"
     >
       <v-card-actions>
-        <v-btn @click="goToCatalog"
-        class="rounded-pill bg-marker_color_orange"
-        >
-        Каталог
+        <v-btn @click="goToCatalog" class="rounded-pill bg-marker_color_orange">
+          Каталог
         </v-btn>
       </v-card-actions>
     </v-card>
-    <div v-else style="flex-direction: column" class="d-flex">
+    <div v-else class="d-flex flex-column">
       <MobileBasket
-      v-if="isMobile"
-      :shopList="shopList"
-      @removeFromBasket="removeFromBasket"
-      @addToBasket="addToBasket"
-      @deleteAll="deleteAll"
+        v-if="isMobile"
+        :shopList="shopList"
+        @removeFromBasket="updateBasket"
+        @addToBasket="updateBasket"
+        @deleteAll="deleteAll"
       />
 
       <LargeBasket
-      v-else
-      :shopList="shopList"
-      @removeFromBasket="removeFromBasket"
-      @addToBasket="addToBasket"
-      @deleteAll="deleteAll"
+        v-else
+        :shopList="shopList"
+        @removeFromBasket="updateBasket"
+        @addToBasket="updateBasket"
+        @deleteAll="deleteAll"
       />
-      
-      <v-card class="bg-main_color_white text-text_color_grey">
-        <v-card-title class="text-right"> 
-          Итого: {{ total }} р 
-        </v-card-title>
-      </v-card>
 
-      <div>
-        <NewOrderModal :isOrderOpened="isOrderOpened" :total="total" />
+      <div
+        class="
+          bg-main_color_white
+          text-text_color_grey
+          d-flex
+          flex-column
+          align-end
+        "
+      >
+        <v-card-title class="text-right">
+          Итого: {{ total.toLocaleString() }} р
+        </v-card-title>
+
+        <v-btn
+            class="bg-marker_color_orange rounded-pill d-block ma-0"
+            variant="text"
+            @click="order"
+          >
+            Оформить заказ
+          </v-btn>
+        <AuthForm :isOpen="isAuthOpen" @closed="closeAuthModal" :isNewOrder="true" />
+        <NewOrderModal 
+            v-model="isOrderOpened"
+            :total="total" 
+            />
       </div>
     </div>
   </v-main>
@@ -51,39 +66,59 @@ import { useDisplay } from "vuetify";
 import router from "../../../router";
 
 import { useBasketStore } from "../../../store/basket";
+import { useUsersStore } from "../../../store/users";
 
 import NewOrderModal from "../../modals/NewOrderModal.vue";
+import AuthForm from "../../modals/AuthForm.vue";
 import MobileBasket from "./MobileBasket.vue";
 import LargeBasket from "./LargeBasket.vue";
 
-
+const usersStore = useUsersStore();
+const isAuthorized = computed(() => {
+  if (usersStore.currentUser === null) {
+    return false;
+  }
+  return true;
+});
 
 const { width } = useDisplay();
 const isMobile = computed(() => width.value < 600);
 
+
 const basketStore = useBasketStore();
 const shopList = computed(() => basketStore.basket);
+const total = computed(() => basketStore.calculateTotal());
 
-const total = computed(() => basketStore.calculateTotal().toString());
-
-const addToBasket = (product) => {
-  basketStore.addToBasket(product);
-};
-
-const removeFromBasket = (product) => {
-  basketStore.removeFromBasket(product);
+const updateBasket = (product) => {
+  basketStore.updateBasket(product);
 };
 
 const deleteAll = (product) => {
-  product.amount = 1;
-  basketStore.removeFromBasket(product);
+  product.amount = 0;
+  basketStore.updateBasket(product);
 };
 
 const goToCatalog = () => {
   router.push({ name: "Catalog" });
 };
 
+
 const isOrderOpened = ref(false);
+const isAuthOpen = ref(false);
+
+const order = () => {
+  if(isAuthorized.value) {
+    isOrderOpened.value = true
+  } else {
+    isAuthOpen.value = true
+  }
+}
+
+const closeAuthModal = () => {
+  isAuthOpen.value = false;
+  isOrderOpened.value = true;
+}
+
 </script>
 
 <style>

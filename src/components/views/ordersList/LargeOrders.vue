@@ -21,7 +21,7 @@
         </thead>
         <tbody v-for="order in orders" :key="order.id">
           <tr>
-            <td class="text-marker_color_orange text-h6">{{ order.id }}</td>
+            <td class="text-marker_color_orange text-h6">{{ orders.indexOf(order) + 1 }}</td>
             <td class="text-marker_color_orange text-h6">{{ order.date }}</td>
             <td></td>
             <td></td>
@@ -37,8 +37,8 @@
               {{ item.amount }}
             </td>
             <td>x</td>
-            <td>{{ item.price }} р</td>
-            <td>{{ item.price * item.amount }} р</td>
+            <td>{{ item.price.toLocaleString() }} р</td>
+            <td>{{ (item.price * item.amount).toLocaleString() }} р</td>
           </tr>
           <tr>
             <td></td>
@@ -46,7 +46,7 @@
             <td class="text-main_color_green text-h6">Итого:</td>
             <td></td>
             <td></td>
-            <td class="text-main_color_green text-h6">{{ order.total }} р</td>
+            <td class="text-main_color_green text-h6">{{ order.total.toLocaleString() }} р</td>
             <td></td>
           </tr>
         </tbody>

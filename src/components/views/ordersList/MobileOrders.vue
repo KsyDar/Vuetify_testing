@@ -7,7 +7,7 @@
           <v-row class="align-center bg-main_color_grey">
             <v-col>
               <v-card-text class="text-h6">
-                №{{ order.id }}
+                №{{ orders.indexOf(order) + 1 }}
               </v-card-text>
             </v-col>
             <v-col></v-col>
@@ -25,12 +25,12 @@
             </v-col>
             <v-col>
               <v-card-text class="text-end text-body-2 font-weight-black">
-                {{ item.amount }} x {{ item.price }} р
+                {{ item.amount }} x {{ item.price.toLocaleString() }} р
               </v-card-text>
             </v-col>
             <v-col>
               <v-card-text class="text-end text-body-2 font-weight-black">
-                = {{ item.price * item.amount }} р
+                = {{ (item.price * item.amount).toLocaleString() }} р
               </v-card-text>
             </v-col>
           </v-row>
@@ -43,7 +43,7 @@
             <v-col></v-col>
             <v-col>
               <v-card-text class="text-end text-h6 text-text_color_orange">
-                {{ order.total }} р
+                {{ order.total.toLocaleString() }} р
               </v-card-text>
             </v-col>
           </v-row>
