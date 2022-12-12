@@ -26,28 +26,28 @@
 </template>
 
 <script setup>
-import { useUsersStore } from "../../../store/users";
+import { useOrdersStore } from "../../store/orders";
 
-import router from "../../../router";
+import router from "../../router";
 
 import { computed, onBeforeMount } from "@vue/runtime-core";
 import { useDisplay } from "vuetify";
 
 import MobileOrders from "./MobileOrders.vue";
-import LargeOrders from "./LargeOrders.vue"
+import LargeOrders from "./LargeOrders.vue";
 
 
 
 const { width } = useDisplay();
 const isMobile = computed(() => width.value < 600);
 
-const usersStore = useUsersStore();
+const ordersStore = useOrdersStore();
 
 onBeforeMount(async () => {
-  await usersStore.getOrdersHistory();
+  await ordersStore.getOrdersHistory();
 });
 
-const orders = computed(() => usersStore.currentOrders);
+const orders = computed(() => ordersStore.currentOrders);
 
 const goToCatalog = () => {
   router.push({ name: "Catalog" });

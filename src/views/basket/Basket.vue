@@ -39,7 +39,7 @@
         "
       >
         <v-card-title class="text-right">
-          Итого: {{ total.toLocaleString() }} р
+          Итого: {{ basketStore.calculateTotal.toLocaleString() }} р
         </v-card-title>
 
         <v-btn
@@ -52,7 +52,7 @@
         <AuthForm :isOpen="isAuthOpen" @closed="closeAuthModal" :isNewOrder="true" />
         <NewOrderModal 
             v-model="isOrderOpened"
-            :total="total" 
+            :total="basketStore.calculateTotal" 
             />
       </div>
     </div>
@@ -63,13 +63,13 @@
 import { computed, ref } from "@vue/runtime-core";
 import { useDisplay } from "vuetify";
 
-import router from "../../../router";
+import router from "../../router";
 
-import { useBasketStore } from "../../../store/basket";
-import { useUsersStore } from "../../../store/users";
+import { useBasketStore } from "../../store/basket";
+import { useUsersStore } from "../../store/users";
 
-import NewOrderModal from "../../modals/NewOrderModal.vue";
-import AuthForm from "../../modals/AuthForm.vue";
+import NewOrderModal from "../../components/modals/NewOrderModal.vue";
+import AuthForm from "../../components/modals/AuthForm.vue";
 import MobileBasket from "./MobileBasket.vue";
 import LargeBasket from "./LargeBasket.vue";
 
@@ -87,7 +87,6 @@ const isMobile = computed(() => width.value < 600);
 
 const basketStore = useBasketStore();
 const shopList = computed(() => basketStore.basket);
-const total = computed(() => basketStore.calculateTotal());
 
 const updateBasket = (product) => {
   basketStore.updateBasket(product);

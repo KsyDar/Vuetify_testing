@@ -2,11 +2,8 @@
   <v-app-bar :elevation="2" density="comfortable" class="bg-main_color_green header">
     <div>
       <MainMenu
-        :isMenuOpened="isMenuOpened"
         :isAuthorized="isAuthorized"
-        :authorizeOpen="authorizeOpen"
         :isFullScreen="isDisable"
-        @login="authorizeOpen = true"
         @exit="exit"
       />
     </div>
@@ -42,13 +39,13 @@
 import { ref, computed } from "@vue/reactivity";
 import { useDisplay } from "vuetify";
 
-import router from "../router";
+import router from "../../router";
 
-import { useUsersStore } from "../store/users";
+import { useUsersStore } from "../../store/users";
 
-import MainMenu from "./MainMenu.vue";
-import AuthForm from "./modals/AuthForm.vue";
-import MobileFilters from "./filters/MobileFilters.vue";
+import MainMenu from "../mainMenu/MainMenu.vue";
+import AuthForm from "../modals/AuthForm.vue";
+import MobileFilters from "../filters/MobileFilters.vue";
 
 
 const isFiltersVisible = computed(() => {
@@ -69,14 +66,13 @@ const goToCatalog = () => {
 };
 
 const usersStore = useUsersStore();
-const authorizeOpen = ref(false);
 const isAuthorized = computed(() => {
   if(usersStore.currentUser !== null) {
     return true
   }
   else return false
 });
-const isMenuOpened = ref(false);
+
 
 const exit = () => {
   usersStore.exit();
@@ -89,7 +85,4 @@ const isDisable = computed(() => width.value > 960);
 </script>
 
 <style>
-/* .header {
-  border-bottom: 4px dotted rgb(var(--v-theme-main_color_1));
-} */
 </style>

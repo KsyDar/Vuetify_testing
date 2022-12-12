@@ -44,24 +44,5 @@ export const useUsersStore = defineStore('users', {
                 console.log(err);
             }
         },
-
-        async getOrdersHistory() {
-            try {
-                const res = await axios.get(`http://localhost:3000/orders?userId=${this.currentUser}`);
-                this.currentOrders = res.data;
-            }
-            catch(err) {
-                console.log(err);
-            }
-        },
-
-        async updateOrdersHistory(newOrder) {
-            try {
-                await axios.post('http://localhost:3000/orders', newOrder);
-            }
-            catch(err) {
-                console.log(err);
-            }
-        }
     }
-})
+});

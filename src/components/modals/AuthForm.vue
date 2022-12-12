@@ -10,15 +10,13 @@
         class="w-100"
         v-bind="props"
         variant="text"
-        @click="authorizeOpen = true"
       >
         Войти
       </v-btn>
       <v-btn
-        v-if="!isNewOrder"
+        v-else-if="!isNewOrder"
         icon="mdi-account-arrow-right"
         v-bind="props"
-        @click="authorizeOpen = true"
       >
       </v-btn>
     </template>

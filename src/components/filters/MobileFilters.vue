@@ -1,11 +1,10 @@
 <template>
   <div class="text-center">
     <v-menu :close-on-content-click="false" location="end" activator="parent">
-      <template v-slot:activator="{ isFiltersOpened }">
+      <template v-slot:activator="{ props }">
         <v-btn
-          v-bind="isFiltersOpened"
+          v-bind="props"
           icon="mdi-filter"
-          @click="isFiltersOpened = !isFiltersOpened"
         ></v-btn>
       </template>
 
@@ -15,10 +14,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
 import Filters from "./Filters.vue";
-
-const isFiltersOpened = ref(false);
 </script>
 
 <style>

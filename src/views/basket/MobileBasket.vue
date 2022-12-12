@@ -54,22 +54,14 @@
 </template>
 
 <script setup>
-import UIcounter from '../../ui/UIcounter.vue';
+import UIcounter from '../../components/ui/UIcounter.vue';
 
 
 const props = defineProps({
     shopList: Array,
 });
 
-const emits = defineEmits(['removeFromBasket', 'addToBasket', 'deleteAll']);
-
-const removeFromBasket = (item) => {
-    emits('removeFromBasket', item);
-};
-
-const addToBasket = (item) => {
-    emits('addToBasket', item);
-};
+const emits = defineEmits(['deleteAll']);
 
 const deleteAll = (item) => {
     emits('deleteAll', item);

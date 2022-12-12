@@ -5,6 +5,7 @@ export const useBasketStore = defineStore('basket', {
     state: () => { 
         const localBasket = JSON.parse(localStorage.getItem('basket'))
         return { 
+            total: 0,
             'basket': localBasket === null ? [] : localBasket,
         }
     },
@@ -40,14 +41,15 @@ export const useBasketStore = defineStore('basket', {
             this.basket = [];
             localStorage.removeItem('basket');
         },
-
-        calculateTotal() {
-            let total = 0;
-            this.basket.forEach(el => {
+    },
+    
+    getters: {
+        calculateTotal: (state) => {
+            state.basket.forEach(el => {
                 const sum = el.amount * el.price
-                total += sum
+                state.total += sum
             });
-            return total
+            return state.total;
         },
-    }
+    },
 })

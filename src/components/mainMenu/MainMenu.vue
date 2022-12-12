@@ -1,9 +1,8 @@
 <template>
   <v-menu bottom left activator="parent">
-    <template v-slot:activator="{ isMenuOpened }">
+    <template v-slot:activator="{ props }">
       <v-app-bar-nav-icon
-        v-bind="isMenuOpened"
-        @click="isMenuOpened = !isMenuOpened"
+        v-bind="props"
       />
     </template>
     <v-list class="bg-main_color_white">
@@ -27,7 +26,6 @@
           <AuthForm
             :isMenu="true"
             :isFullScreen="!isFullScreen"
-            @authorisationSuccess="authorizeOpen = false"
           />
         </div>
         <v-btn v-else class="w-100" variant="text" @click="exit"> Выйти </v-btn>
@@ -37,32 +35,27 @@
 </template>
 
 <script setup>
-import router from "../router";
+import router from "../../router";
 
 import { ref } from "@vue/reactivity";
 
-import { useUsersStore } from "../store/users";
+import { useUsersStore } from "../../store/users";
 
-import AuthForm from "./modals/AuthForm.vue";
+import AuthForm from "../modals/AuthForm.vue";
 
 
 const props = defineProps({
   isMenuOpened: Boolean,
   isAuthorized: Boolean,
-  authorizeOpen: Boolean,
   isFullScreen: Boolean,
 });
 
-const emits = defineEmits(["login", "exit"]);
+const emits = defineEmits(["exit"]);
 
 const isOrdersOpened = ref(false);
 
 const goToBasket = () => {
   router.push({ name: "Basket" });
-};
-
-const authorisation = () => {
-  emits("login");
 };
 
 const goToOrders = () => {

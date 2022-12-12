@@ -84,6 +84,7 @@
 import { ref } from "@vue/runtime-core";
 import { useBasketStore } from "../../store/basket";
 import { useUsersStore } from "../../store/users";
+import { useOrdersStore } from "../../store/orders";
 
 
 const props = defineProps({
@@ -104,6 +105,7 @@ const errorFilling = ref(false);
 
 const basketStore = useBasketStore();
 const usersStore = useUsersStore();
+const ordersStore = useOrdersStore();
 
 const submitForm = () => {
   if (
@@ -134,7 +136,7 @@ const submitForm = () => {
     date: `${date.getDate()}.${date.getMonth()}.${date.getFullYear()}`,
     total: props.total,
   };
-  usersStore.updateOrdersHistory(order);
+  ordersStore.updateOrdersHistory(order);
   basketStore.cleanBasket();
   emit('update:modelValue', false)
 };

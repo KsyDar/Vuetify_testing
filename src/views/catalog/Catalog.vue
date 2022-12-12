@@ -55,8 +55,8 @@ import { useBasketStore } from "../../store/basket";
 import { computed, onBeforeMount, ref, watch } from "vue";
 import { useDisplay } from "vuetify";
 
-import Filters from "../filters/Filters.vue";
-import UIcounter from "../ui/UIcounter.vue";
+import Filters from "../../components/filters/Filters.vue";
+import UIcounter from "../../components/ui/UIcounter.vue";
 
 const productsStore = useProductsStore();
 const basketStore = useBasketStore();
