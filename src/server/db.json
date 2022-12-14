@@ -181,37 +181,18 @@
     {
       "id": "1",
       "name": "LowArt",
-      "password": "1234"
+      "password": "1234",
+      "fio": "Ананасов Ананас Ананасович",
+      "address": "Москва, Ананасовая ул., д. 7",
+      "number": "89996665544"
     },
     {
       "id": "2",
       "name": "XuXu",
-      "password": "1234"
-    },
-    {
-      "name": "sdcdsc",
-      "password": "sdcdsc",
-      "id": "nwr3-UG"
-    },
-    {
-      "name": "erfcref",
-      "password": "eededed",
-      "id": "_SjcoLu"
-    },
-    {
-      "name": "ffdbgrh",
-      "password": "rgreg",
-      "id": "_TkMMAT"
-    },
-    {
-      "name": "erfrf",
-      "password": "efrefref",
-      "id": "E7v4RYq"
-    },
-    {
-      "name": "Buka",
       "password": "1234",
-      "id": "JedQYFW"
+      "fio": "Идиотовна Маракуйя Маракуйевна",
+      "address": "Москва, Персиковая ул., д. 1",
+      "number": "89997776655"
     }
   ],
   "orders": [
@@ -300,35 +281,6 @@
       "list": [
         {
           "amount": 1,
-          "id": "1",
-          "name": "Кальян Don Smart",
-          "image": "https://sweet-smoke.market/media/cache/app_product_reference/uploads/media/shop_product/0001/26/d9ea5fdc3ca93b48d53c677af95d3ba712bf9c70.jpeg",
-          "price": 2900
-        },
-        {
-          "amount": 1,
-          "id": "2",
-          "name": "Кальян Hype Carbon",
-          "image": "https://sweet-smoke.market/media/cache/app_product_reference/uploads/media/shop_product/0001/35/a29e0146803ac7df81791fa73e4d4f8e3d8bae69.jpeg",
-          "price": 3700
-        }
-      ],
-      "date": "8.11.2022",
-      "total": 6600,
-      "id": "t-oDH06"
-    },
-    {
-      "userId": "1",
-      "list": [
-        {
-          "amount": 1,
-          "id": "1",
-          "name": "Кальян Don Smart",
-          "image": "https://sweet-smoke.market/media/cache/app_product_reference/uploads/media/shop_product/0001/26/d9ea5fdc3ca93b48d53c677af95d3ba712bf9c70.jpeg",
-          "price": 2900
-        },
-        {
-          "amount": 3,
           "id": "2",
           "name": "Кальян Hype Carbon",
           "image": "https://sweet-smoke.market/media/cache/app_product_reference/uploads/media/shop_product/0001/35/a29e0146803ac7df81791fa73e4d4f8e3d8bae69.jpeg",
@@ -342,9 +294,8 @@
           "price": 14800
         }
       ],
-      "date": "12.11.2022",
-      "total": 28800,
-      "id": "YB17hMf"
+      "date": "13.11.2022",
+      "id": "9ofoePS"
     }
   ]
 }

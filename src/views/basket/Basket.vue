@@ -16,16 +16,12 @@
       <MobileBasket
         v-if="isMobile"
         :shopList="shopList"
-        @removeFromBasket="updateBasket"
-        @addToBasket="updateBasket"
         @deleteAll="deleteAll"
       />
 
       <LargeBasket
         v-else
         :shopList="shopList"
-        @removeFromBasket="updateBasket"
-        @addToBasket="updateBasket"
         @deleteAll="deleteAll"
       />
 
@@ -39,7 +35,7 @@
         "
       >
         <v-card-title class="text-right">
-          Итого: {{ basketStore.calculateTotal.toLocaleString() }} р
+          Итого: {{ basketStore.calculatedTotal.toLocaleString() }} р
         </v-card-title>
 
         <v-btn

@@ -15,7 +15,6 @@
       <v-col cols="4" class="pa-0">
         <input
           v-model="counter"
-          type="number"
           size="1"
           maxlength="2"
           class="h-100 ml-2 text-main_color_white count-input"

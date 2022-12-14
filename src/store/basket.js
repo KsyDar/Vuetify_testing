@@ -44,7 +44,7 @@ export const useBasketStore = defineStore('basket', {
     },
     
     getters: {
-        calculateTotal: (state) => {
+        calculatedTotal: (state) => {
             state.basket.forEach(el => {
                 const sum = el.amount * el.price
                 state.total += sum

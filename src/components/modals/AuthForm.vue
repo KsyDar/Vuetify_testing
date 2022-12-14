@@ -167,6 +167,9 @@ const register = async () => {
   const user = {
     name: name.value,
     password: password.value,
+    fio: "",
+    address: "",
+    number: "",
   };
 
   await usersStore.addUser(user);

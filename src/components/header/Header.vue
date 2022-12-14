@@ -58,7 +58,7 @@ const isFiltersVisible = computed(() => {
 
 
 const goToBasket = () => {
-  router.push({ name: "Basket" });;
+  router.push({ name: "Basket" });
 };
 
 const goToCatalog = () => {
@@ -77,6 +77,7 @@ const isAuthorized = computed(() => {
 const exit = () => {
   usersStore.exit();
   usersStore.$reset();
+  router.push({ name: "Catalog" });
 };
 
 

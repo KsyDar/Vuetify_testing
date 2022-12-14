@@ -16,7 +16,7 @@
               {{ item.name }}
               </v-card-title>
               <v-card-subtitle>
-                Итого: {{ total.toLocaleString() }} р
+                Итого: {{ (item.price * item.amount).toLocaleString() }} р
               </v-card-subtitle>
             </v-col>
           </v-row>
